@@ -1,21 +1,38 @@
 import React, { Component } from "react";
 import Message from "./message";
+import { getMessages, saveMessages } from "../model/model.js";
 
-let messages = [];
+// async function loadMessages() {
+// 	console.log("asdasd");
+// 	const messages = getMessages();
+// 	// console.log(messages);
+// 	// ChatContainer.state.setState("messages", messages);
+// }
 
 export default class ChatContainer extends Component {
 	state = {
-		messages: messages,
-		nickname: localStorage.getItem('nickname') || "",
+		messages: [],
+		nickname: localStorage.getItem("nickname") || "",
 		message: "",
 	};
+
+	async componentDidMount() {
+
+		const chatHistory = await getMessages();
+		this.setState({
+			"messages": chatHistory
+		});
+	}
+
+
 
 	onChange = (e) => {
 		this.setState({
 			[e.target.name]: e.target.value,
 		});
 
-		if(e.target.name === 'nickname') localStorage.setItem('nickname', e.target.value);
+		if (e.target.name === "nickname")
+			localStorage.setItem("nickname", e.target.value);
 	};
 
 	sendMessage = (e) => {
@@ -30,6 +47,8 @@ export default class ChatContainer extends Component {
 		this.setState({
 			messages: [...this.state.messages, newMessage],
 		});
+
+		saveMessages(this.state.messages);
 	};
 
 	render() {
@@ -66,7 +85,7 @@ export default class ChatContainer extends Component {
 
 					<div className="messagesContainer">
 						{this.state.messages.map((message) => (
-							<Message message={message} key={message.id}/>
+							<Message message={message} key={message.id} />
 						))}
 					</div>
 				</div>
