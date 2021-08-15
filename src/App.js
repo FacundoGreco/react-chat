@@ -1,16 +1,11 @@
-import React, { Component } from "react";
-import ChatContainer from "./components/chatContainer";
+import React from "react";
+import ChatContainer from "./components/ChatContainer";
 import "./styles/App.css";
 
-class App extends Component {
-	render() {
-		return (
-			<div className="App">
-				<ChatContainer/>
-					
-			</div>
-		);
-	}
+export default function App() {
+	return (
+		<div className="App">
+			<ChatContainer />
+		</div>
+	);
 }
-
-export default App;

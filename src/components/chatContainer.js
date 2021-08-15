@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import Message from "./message";
+import { React, useState, useEffect } from "react";
+import Message from "./Message";
 import { getMessages, saveMessages } from "../model/model.js";
 
 // async function loadMessages() {
@@ -9,87 +9,79 @@ import { getMessages, saveMessages } from "../model/model.js";
 // 	// ChatContainer.state.setState("messages", messages);
 // }
 
-export default class ChatContainer extends Component {
-	state = {
-		messages: [],
-		nickname: localStorage.getItem("nickname") || "",
-		message: "",
+export default function ChatContainer() {
+	const [messages, setMessages] = useState([]);
+	const [nickname, setNickname] = useState(localStorage.getItem("nickname") || "");
+	const [message, setMessage] = useState("");
+
+	useEffect(() => {
+		async function loadChat() {
+			const chatHistory = await getMessages();
+			setMessages(chatHistory);
+		}
+		loadChat();
+		console.log("charge");
+	}, []);
+
+	const onChange = (e, setHook) => {
+		setHook(e.target.value);
+
+		if (e.target.name === "nickname") localStorage.setItem("nickname", e.target.value);
 	};
 
-	async componentDidMount() {
-
-		const chatHistory = await getMessages();
-		this.setState({
-			"messages": chatHistory
-		});
-	}
-
-
-
-	onChange = (e) => {
-		this.setState({
-			[e.target.name]: e.target.value,
-		});
-
-		if (e.target.name === "nickname")
-			localStorage.setItem("nickname", e.target.value);
-	};
-
-	sendMessage = (e) => {
+	const sendMessage = (e) => {
 		e.preventDefault();
 
 		const newMessage = {
-			id: this.state.messages.length + 1,
-			nickname: this.state.nickname,
-			message: this.state.message,
+			id: messages.length + 1,
+			nickname: nickname,
+			message: message,
 		};
 
-		this.setState({
-			messages: [...this.state.messages, newMessage],
-		});
+		setMessages([...messages, newMessage]);
 
-		saveMessages(this.state.messages);
+		saveMessages(messages);
 	};
 
-	render() {
-		return (
-			<div className={"container chatContainer"}>
-				<h2>CHAT</h2>
-				<div className="chatSection">
-					<form className="inputContainer" onSubmit={this.sendMessage}>
-						<fieldset>
-							<label htmlFor="nickname">Nickname</label>
-							<input
-								type="text"
-								id="nickname"
-								name="nickname"
-								value={this.state.nickname}
-								onChange={this.onChange}
-							/>
-						</fieldset>
-
-						<fieldset>
-							<label htmlFor="message">Message</label>
-							<textarea
-								cols="30"
-								rows="6"
-								id="message"
-								name="message"
-								value={this.state.message}
-								onChange={this.onChange}
-							></textarea>
-						</fieldset>
-
-						<button>ENVIAR</button>
-					</form>
-
-					<div className="messagesContainer">
-						{this.state.messages.map((message) => (
-							<Message message={message} key={message.id} />
-						))}
-					</div>
-				</div>
-			</div>
-		);
-	}
+	return (
+		<div className={"container chatContainer"}>
+			<h2> CHAT </h2>{" "}
+			<div className="chatSection">
+				<form className="inputContainer" onSubmit={sendMessage}>
+					<fieldset>
+						<label htmlFor="nickname"> Nickname </label>{" "}
+						<input
+							type="text"
+							id="nickname"
+							name="nickname"
+							value={nickname}
+							onChange={(e) => {
+								onChange(e, setNickname);
+							}}
+						/>{" "}
+					</fieldset>
+					<fieldset>
+						<label htmlFor="message"> Message </label>{" "}
+						<textarea
+							cols="30"
+							rows="6"
+							id="message"
+							name="message"
+							value={message}
+							onChange={(e) => {
+								onChange(e, setMessage);
+							}}
+						></textarea>{" "}
+					</fieldset>
+					<button> ENVIAR </button>{" "}
+				</form>
+				<div className="messagesContainer">
+					{" "}
+					{messages.map((message) => (
+						<Message message={message} key={message.id} />
+					))}{" "}
+				</div>{" "}
+			</div>{" "}
+		</div>
+	);
 }
