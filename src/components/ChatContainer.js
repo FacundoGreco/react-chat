@@ -5,6 +5,7 @@ import MessagesContainer from "./MessagesContainer";
 import "./ChatContainer.scss";
 
 export default function ChatContainer() {
+	const [loadingMessages, setloadingMessages] = useState(true);
 	const [messages, setMessages] = useState([]);
 	const [notification, setNotification] = useState("");
 	const [newMessage, setNewMessage] = useState({
@@ -15,6 +16,7 @@ export default function ChatContainer() {
 
 	useEffect(() => {
 		getMessages(setMessages, setNotification);
+		setloadingMessages(false);
 	}, []);
 
 	const onChange = (e) => {
@@ -53,7 +55,7 @@ export default function ChatContainer() {
 					sendMessage={sendMessage}
 				/>
 
-				<MessagesContainer messages={messages} />
+				<MessagesContainer loadingMessages={loadingMessages} messages={messages} />
 			</section>
 		</div>
 	);
