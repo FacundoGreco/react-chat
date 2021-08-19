@@ -7,6 +7,15 @@ export default function FormContainer({ newMessage, onChange, sendMessage }) {
 		document.querySelector(`.colorPicker option[value=${newMessage.color}]`).selected = true;
 	}, [newMessage.color]);
 
+	const onKeyPress = (e) => {
+		const keyCode = e.which || e.keyCode;
+
+		if (keyCode === 13 && !e.shiftKey) {
+			e.preventDefault();
+			sendMessage();
+		}
+	};
+
 	return (
 		<form className="inputContainer" onSubmit={sendMessage}>
 			<fieldset className="transmiterData">
@@ -41,6 +50,7 @@ export default function FormContainer({ newMessage, onChange, sendMessage }) {
 					name="message"
 					value={newMessage.message}
 					onChange={onChange}
+					onKeyPress={onKeyPress}
 				></textarea>
 			</fieldset>
 			<button> ENVIAR </button>

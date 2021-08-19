@@ -25,7 +25,7 @@ export default function ChatContainer() {
 	};
 
 	const sendMessage = (e) => {
-		e.preventDefault();
+		if (e) e.preventDefault();
 
 		const message = {
 			date: new Date(),
