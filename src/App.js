@@ -1,5 +1,5 @@
 import React from "react";
-import ChatContainer from "./components/ChatContainer";
+import ChatContainer from "./components/ChatContainer.js";
 import "./styles/App.css";
 
 export default function App() {

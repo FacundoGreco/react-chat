@@ -2,25 +2,13 @@ import { React, useState, useEffect } from "react";
 import Message from "./Message";
 import { getMessages, saveMessages } from "../model/model.js";
 
-// async function loadMessages() {
-// 	console.log("asdasd");
-// 	const messages = getMessages();
-// 	// console.log(messages);
-// 	// ChatContainer.state.setState("messages", messages);
-// }
-
 export default function ChatContainer() {
 	const [messages, setMessages] = useState([]);
 	const [nickname, setNickname] = useState(localStorage.getItem("nickname") || "");
 	const [message, setMessage] = useState("");
 
 	useEffect(() => {
-		async function loadChat() {
-			const chatHistory = await getMessages();
-			setMessages(chatHistory);
-		}
-		loadChat();
-		console.log("charge");
+		getMessages(setMessages);
 	}, []);
 
 	const onChange = (e, setHook) => {
@@ -33,23 +21,23 @@ export default function ChatContainer() {
 		e.preventDefault();
 
 		const newMessage = {
-			id: messages.length + 1,
+			date: new Date(),
 			nickname: nickname,
 			message: message,
 		};
 
-		setMessages([...messages, newMessage]);
-
-		saveMessages(messages);
+		// setMessages([...messages, newMessage]);
+		saveMessages(newMessage);
+		setMessage("");
 	};
 
 	return (
 		<div className={"container chatContainer"}>
-			<h2> CHAT </h2>{" "}
+			<h2> CHAT </h2>
 			<div className="chatSection">
 				<form className="inputContainer" onSubmit={sendMessage}>
 					<fieldset>
-						<label htmlFor="nickname"> Nickname </label>{" "}
+						<label htmlFor="nickname"> Nickname </label>
 						<input
 							type="text"
 							id="nickname"
@@ -58,10 +46,10 @@ export default function ChatContainer() {
 							onChange={(e) => {
 								onChange(e, setNickname);
 							}}
-						/>{" "}
+						/>
 					</fieldset>
 					<fieldset>
-						<label htmlFor="message"> Message </label>{" "}
+						<label htmlFor="message"> Message </label>
 						<textarea
 							cols="30"
 							rows="6"
@@ -71,17 +59,14 @@ export default function ChatContainer() {
 							onChange={(e) => {
 								onChange(e, setMessage);
 							}}
-						></textarea>{" "}
+						></textarea>
 					</fieldset>
-					<button> ENVIAR </button>{" "}
+					<button> ENVIAR </button>
 				</form>
 				<div className="messagesContainer">
-					{" "}
-					{messages.map((message) => (
-						<Message message={message} key={message.id} />
-					))}{" "}
-				</div>{" "}
-			</div>{" "}
+					{messages && messages.map((message) => <Message message={message} key={message.id} />)}
+				</div>
+			</div>
 		</div>
 	);
 }
