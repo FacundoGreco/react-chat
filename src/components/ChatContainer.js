@@ -1,72 +1,55 @@
 import { React, useState, useEffect } from "react";
-import Message from "./Message";
 import { getMessages, saveMessages } from "../model/model.js";
+import FormContainer from "./FormContainer.js";
+import MessagesContainer from "./MessagesContainer";
+import "./ChatContainer.scss";
 
 export default function ChatContainer() {
 	const [messages, setMessages] = useState([]);
-	const [nickname, setNickname] = useState(localStorage.getItem("nickname") || "");
-	const [message, setMessage] = useState("");
+	const [newMessage, setNewMessage] = useState({
+		transmiterData: {
+			nickname: localStorage.getItem("nickname" || ""),
+			color: localStorage.getItem("color" || "white"),
+		},
+		message: "",
+	});
 
 	useEffect(() => {
 		getMessages(setMessages);
 	}, []);
 
-	const onChange = (e, setHook) => {
-		setHook(e.target.value);
+	const onChange = (e) => {
+		const { name, value } = e.target;
+		setNewMessage({ ...newMessage, [name]: value });
 
-		if (e.target.name === "nickname") localStorage.setItem("nickname", e.target.value);
+		if (name === "nickname") localStorage.setItem("nickname", value);
+		if (name === "color") localStorage.setItem("color", value);
 	};
 
 	const sendMessage = (e) => {
 		e.preventDefault();
 
-		const newMessage = {
+		const message = {
 			date: new Date(),
-			nickname: nickname,
-			message: message,
+			transmiterData: {
+				nickname: newMessage.transmiterData.nickname,
+				color: newMessage.transmiterData.color,
+			},
+			message: newMessage.message,
 		};
 
-		// setMessages([...messages, newMessage]);
-		saveMessages(newMessage);
-		setMessage("");
+		saveMessages(message);
+		setNewMessage({ ...newMessage, message: "" });
 	};
 
 	return (
 		<div className={"container chatContainer"}>
 			<h2> CHAT </h2>
-			<div className="chatSection">
-				<form className="inputContainer" onSubmit={sendMessage}>
-					<fieldset>
-						<label htmlFor="nickname"> Nickname </label>
-						<input
-							type="text"
-							id="nickname"
-							name="nickname"
-							value={nickname}
-							onChange={(e) => {
-								onChange(e, setNickname);
-							}}
-						/>
-					</fieldset>
-					<fieldset>
-						<label htmlFor="message"> Message </label>
-						<textarea
-							cols="30"
-							rows="6"
-							id="message"
-							name="message"
-							value={message}
-							onChange={(e) => {
-								onChange(e, setMessage);
-							}}
-						></textarea>
-					</fieldset>
-					<button> ENVIAR </button>
-				</form>
-				<div className="messagesContainer">
-					{messages && messages.map((message) => <Message message={message} key={message.id} />)}
-				</div>
-			</div>
+			<section className="chatSection">
+				<FormContainer newMessage={newMessage} onChange={onChange} sendMessage={sendMessage} />
+
+				<MessagesContainer messages={messages} />
+			</section>
 		</div>
 	);
 }
