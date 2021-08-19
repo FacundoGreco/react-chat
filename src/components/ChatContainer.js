@@ -7,10 +7,8 @@ import "./ChatContainer.scss";
 export default function ChatContainer() {
 	const [messages, setMessages] = useState([]);
 	const [newMessage, setNewMessage] = useState({
-		transmiterData: {
-			nickname: localStorage.getItem("nickname" || ""),
-			color: localStorage.getItem("color" || "white"),
-		},
+		nickname: localStorage.getItem("nickname" || ""),
+		color: localStorage.getItem("color" || "white"),
 		message: "",
 	});
 
@@ -31,10 +29,8 @@ export default function ChatContainer() {
 
 		const message = {
 			date: new Date(),
-			transmiterData: {
-				nickname: newMessage.transmiterData.nickname,
-				color: newMessage.transmiterData.color,
-			},
+			nickname: newMessage.nickname,
+			color: newMessage.color,
 			message: newMessage.message,
 		};
 
