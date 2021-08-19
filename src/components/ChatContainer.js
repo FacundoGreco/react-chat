@@ -6,6 +6,7 @@ import "./ChatContainer.scss";
 
 export default function ChatContainer() {
 	const [messages, setMessages] = useState([]);
+	const [notification, setNotification] = useState("");
 	const [newMessage, setNewMessage] = useState({
 		nickname: localStorage.getItem("nickname" || ""),
 		color: localStorage.getItem("color" || "white"),
@@ -13,7 +14,7 @@ export default function ChatContainer() {
 	});
 
 	useEffect(() => {
-		getMessages(setMessages);
+		getMessages(setMessages, setNotification);
 	}, []);
 
 	const onChange = (e) => {
@@ -27,6 +28,9 @@ export default function ChatContainer() {
 	const sendMessage = (e) => {
 		if (e) e.preventDefault();
 
+		if (!newMessage.message) return setNotification("No ha escrito ningún mensaje.");
+		else setNotification("");
+
 		const message = {
 			date: new Date(),
 			nickname: newMessage.nickname,
@@ -34,7 +38,7 @@ export default function ChatContainer() {
 			message: newMessage.message,
 		};
 
-		saveMessages(message);
+		saveMessages(message, setNotification);
 		setNewMessage({ ...newMessage, message: "" });
 	};
 
@@ -42,7 +46,12 @@ export default function ChatContainer() {
 		<div className={"container chatContainer"}>
 			<h2> CHAT </h2>
 			<section className="chatSection">
-				<FormContainer newMessage={newMessage} onChange={onChange} sendMessage={sendMessage} />
+				<FormContainer
+					newMessage={newMessage}
+					notification={notification}
+					onChange={onChange}
+					sendMessage={sendMessage}
+				/>
 
 				<MessagesContainer messages={messages} />
 			</section>
