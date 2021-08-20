@@ -1,11 +1,17 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import "./FormContainer.scss";
 
-export default function FormContainer({ newMessage, notification, onChange, sendMessage }) {
+export default function FormContainer({ loadingMessages, newMessage, notification, onChange, sendMessage }) {
+	const [disableSubmit, setdisableSubmit] = useState(true);
+
 	useEffect(() => {
 		document.querySelector(`.colorPicker option[value=${newMessage.color}]`).selected = true;
 	}, [newMessage.color]);
+
+	useEffect(() => {
+		setdisableSubmit(loadingMessages);
+	}, [loadingMessages]);
 
 	const onKeyPress = (e) => {
 		const keyCode = e.which || e.keyCode;
@@ -54,7 +60,7 @@ export default function FormContainer({ newMessage, notification, onChange, send
 						onKeyPress={onKeyPress}
 					></textarea>
 				</fieldset>
-				<button> ENVIAR </button>
+				<button disabled={disableSubmit}> ENVIAR </button>
 				<p className="notification">{notification}</p>
 			</form>
 		</>

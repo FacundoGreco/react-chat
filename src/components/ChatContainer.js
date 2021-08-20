@@ -14,9 +14,21 @@ export default function ChatContainer() {
 		message: "",
 	});
 
+	const loadMessages = async () => {
+		try {
+			await getMessages(setMessages);
+
+			setTimeout(() => {
+				setloadingMessages(false);
+			}, 1000);
+		} catch (error) {
+			console.log(error);
+			setNotification(error.message);
+		}
+	};
+
 	useEffect(() => {
-		getMessages(setMessages, setNotification);
-		setloadingMessages(false);
+		loadMessages();
 	}, []);
 
 	const onChange = (e) => {
@@ -27,8 +39,10 @@ export default function ChatContainer() {
 		if (name === "color") localStorage.setItem("color", value);
 	};
 
-	const sendMessage = (e) => {
+	const sendMessage = async (e) => {
 		if (e) e.preventDefault();
+
+		if (loadingMessages) return;
 
 		if (!newMessage.message) return setNotification("No ha escrito ningún mensaje.");
 		else setNotification("");
@@ -40,8 +54,15 @@ export default function ChatContainer() {
 			message: newMessage.message,
 		};
 
-		saveMessages(message, setNotification);
 		setNewMessage({ ...newMessage, message: "" });
+
+		try {
+			await saveMessages(message);
+			setNotification("Mensaje enviado");
+		} catch (error) {
+			console.log(error);
+			setNotification(error.message);
+		}
 	};
 
 	return (
@@ -49,6 +70,7 @@ export default function ChatContainer() {
 			<h2> CHAT </h2>
 			<section className="chatSection">
 				<FormContainer
+					loadingMessages={loadingMessages}
 					newMessage={newMessage}
 					notification={notification}
 					onChange={onChange}

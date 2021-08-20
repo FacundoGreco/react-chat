@@ -1,6 +1,6 @@
 import { db } from "./database.js";
 
-async function getMessages(setMessages, setNotification) {
+async function getMessages(setMessages) {
 	try {
 		db.collection("messages")
 			.orderBy("date", "asc")
@@ -10,20 +10,20 @@ async function getMessages(setMessages, setNotification) {
 				querySnapshot.forEach((doc) => {
 					chatHistory.push({ id: doc.id, ...doc.data() });
 				});
-
 				setMessages(chatHistory);
 			});
 	} catch (error) {
-		setNotification("Los mensajes no se pudieron cargar: ", error.message);
+		console.log(error);
+		throw new Error("Los mensajes no se pudieron cargar");
 	}
 }
 
-async function saveMessages(message, setNotification) {
+async function saveMessages(message) {
 	try {
 		await db.collection("messages").doc().set(message);
-		setNotification("Mensaje enviado");
 	} catch (error) {
-		setNotification("El mensaje no se pudo enviar: ", error.message);
+		console.log(error);
+		throw new Error("El mensaje no se pudo enviar.");
 	}
 }
 
