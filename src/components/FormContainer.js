@@ -6,7 +6,9 @@ export default function FormContainer({ loadingMessages, newMessage, notificatio
 	const [disableSubmit, setdisableSubmit] = useState(true);
 
 	useEffect(() => {
-		document.querySelector(`.colorPicker option[value=${newMessage.color}]`).selected = true;
+		const colorOption = document.querySelector(`.colorPicker option[value=${newMessage.color}]`);
+
+		colorOption && (colorOption.selected = true);
 	}, [newMessage.color]);
 
 	useEffect(() => {
