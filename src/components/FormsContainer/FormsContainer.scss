@@ -6,4 +6,41 @@
 	flex-direction: column;
 	justify-content: space-around;
 	align-items: center;
+
+	form {
+		width: 90%;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+
+		fieldset {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			border: none;
+			margin-bottom: 20px;
+
+			label,
+			input,
+			.messageArea {
+				width: 100%;
+			}
+
+			label {
+				font-size: larger;
+			}
+
+			input,
+			textarea {
+				font-size: large;
+			}
+		}
+
+		button {
+			font-size: medium;
+			width: 90px;
+			height: 40px;
+		}
+	}
 }
