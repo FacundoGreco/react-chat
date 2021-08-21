@@ -20,7 +20,7 @@ export default function ChatContainer() {
 
 			setTimeout(() => {
 				setloadingMessages(false);
-			}, 1000);
+			}, 500);
 		} catch (error) {
 			console.log(error);
 			setNotification(error.message);
