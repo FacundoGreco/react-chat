@@ -1,7 +1,7 @@
 import { React, useState, useEffect } from "react";
 import { getMessages, saveMessages } from "../model/model.js";
-import FormContainer from "./FormContainer.js";
-import MessagesContainer from "./MessagesContainer";
+import FormContainer from "./FormsContainer/FormsContainer.js";
+import MessagesContainer from "./MessagesContainer/MessagesContainer";
 import "./ChatContainer.scss";
 
 export default function ChatContainer() {
@@ -70,7 +70,7 @@ export default function ChatContainer() {
 			<h2> CHAT </h2>
 			<section className="chatSection">
 				<FormContainer
-					loadingMessages={loadingMessages}
+					disableSubmit={loadingMessages}
 					newMessage={newMessage}
 					notification={notification}
 					onChange={onChange}
