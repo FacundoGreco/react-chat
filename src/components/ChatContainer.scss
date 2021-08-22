@@ -1,5 +1,10 @@
-.container {
+.chatContainer {
 	box-sizing: border-box;
+	width: 98%;
+	max-width: 1200px;
+	min-height: 800px;
+	height: 98%;
+	max-height: 800px;
 	margin: auto;
 	padding: 15px;
 	background-color: rgb(38, 38, 38);
@@ -7,21 +12,22 @@
 	text-align: left;
 	border-radius: 2%;
 	box-shadow: 0 6px 25px black;
+
+	h2 {
+		margin-bottom: 5px;
+		text-align: center;
+	}
+
+	.chatSection {
+		display: flex;
+		width: 100%;
+		height: 95%;
+		border: 2px solid white;
+	}
 }
 
-.container h2 {
-	margin-bottom: 5px;
-	text-align: center;
-}
-
-.chatContainer {
-	width: 60%;
-	height: 80%;
-}
-
-.chatSection {
-	display: flex;
-	width: 100%;
-	height: 95%;
-	border: 2px solid white;
+@media only screen and (max-width: 576px) {
+	.chatContainer {
+		padding: 10px 5px;
+	}
 }

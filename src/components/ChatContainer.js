@@ -66,7 +66,7 @@ export default function ChatContainer() {
 	};
 
 	return (
-		<div className={"container chatContainer"}>
+		<div className={"chatContainer"}>
 			<h2> CHAT </h2>
 			<section className="chatSection">
 				<FormContainer
