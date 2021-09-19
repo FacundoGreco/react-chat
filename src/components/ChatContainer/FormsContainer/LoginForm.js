@@ -1,7 +1,10 @@
 import React, { useState } from "react";
+import { useUserContext } from "../../Contexts/UserContext";
 import "./LoginForm.scss";
 
 export default function LoginForm() {
+	const { registerUser, notification, setNotification } = useUserContext();
+
 	const [user, setUser] = useState({
 		username: "",
 		password: "",
@@ -13,14 +16,17 @@ export default function LoginForm() {
 		setUser({ ...user, [name]: value });
 	};
 
-	const register = (e) => {
-		e && e.preventDefault();
-		console.log(user);
+	const handleRegister = (e) => {
+		e.preventDefault();
+		if (!user.username) return setNotification("El usuario está vacío.");
+		if (!user.password) return setNotification("La contraseña está vacía.");
+
+		registerUser(user);
+		setUser({ ...user, password: "" });
 	};
 
-	const login = (e) => {
-		e && e.preventDefault();
-		console.log(user);
+	const handleLogin = (e) => {
+		e.preventDefault();
 	};
 
 	return (
@@ -48,9 +54,10 @@ export default function LoginForm() {
 			</fieldset>
 
 			<div className={"buttonsDiv"}>
-				<button onClick={register}> Registrarse </button>
-				<button onClick={login}> Login </button>
+				<button onClick={handleRegister}> Registrarse </button>
+				<button onClick={handleLogin}> Login </button>
 			</div>
+			<p className="notification">{notification}</p>
 		</form>
 	);
 }

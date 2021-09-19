@@ -27,4 +27,13 @@ async function saveMessages(message) {
 	}
 }
 
-export { getMessages, saveMessages };
+async function saveNewUser(newUser) {
+	try {
+		await db.collection("users").doc().set(newUser);
+	} catch (error) {
+		console.log(error);
+		throw new Error("El usuario no se pudo registrar.");
+	}
+}
+
+export { getMessages, saveMessages, saveNewUser };
