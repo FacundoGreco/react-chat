@@ -1,20 +1,14 @@
 import React from "react";
+import LoginForm from "./LoginForm";
 import MessageForm from "./MessageForm";
 
 import "./FormsContainer.scss";
-import LoginForm from "./LoginForm";
 
-export default function FormsContainer({ disableSubmit, newMessage, notification, onChange, sendMessage }) {
+export default function FormsContainer() {
 	return (
 		<div className={"formsContainer"}>
 			<LoginForm />
-			<MessageForm
-				disableSubmit={disableSubmit}
-				newMessage={newMessage}
-				notification={notification}
-				onChange={onChange}
-				sendMessage={sendMessage}
-			/>
+			<MessageForm />
 		</div>
 	);
 }
