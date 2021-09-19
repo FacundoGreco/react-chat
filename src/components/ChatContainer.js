@@ -44,8 +44,10 @@ export default function ChatContainer() {
 
 		if (loadingMessages) return;
 
+		if (!newMessage.nickname) return setNotification("No ha ingresado un nickname.");
 		if (!newMessage.message) return setNotification("No ha escrito ningún mensaje.");
-		else setNotification("");
+
+		setNotification("");
 
 		const message = {
 			date: new Date(),
