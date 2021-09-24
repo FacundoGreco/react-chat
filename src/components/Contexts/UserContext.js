@@ -11,6 +11,7 @@ export function UserProvider({ children }) {
 
 	const registerUser = async (newUser) => {
 		setNotification("");
+		setUserLogged(false);
 
 		try {
 			await saveNewUser({ ...newUser, nickname: "", color: "white" });
@@ -22,6 +23,7 @@ export function UserProvider({ children }) {
 
 	const loginUser = async (user) => {
 		setNotification("");
+		setUserLogged(false);
 
 		try {
 			const userData = await verifyUser(user);

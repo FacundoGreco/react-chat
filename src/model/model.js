@@ -45,7 +45,6 @@ async function verifyUser({ username, password }) {
 			.get();
 
 		if (user.docs[0]) {
-			console.log(user.docs[0].data());
 			return user.docs[0].data();
 		} else {
 			return false;

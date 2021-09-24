@@ -8,8 +8,8 @@ export default function MessageForm() {
 	const { loadingMessages, notification, setNotification, sendMessage } = useMessagesContext();
 
 	const [newMessage, setNewMessage] = useState({
-		nickname: localStorage.getItem("nickname") || "",
-		color: localStorage.getItem("color") || "white",
+		nickname: "",
+		color: "white",
 		message: "",
 	});
 
@@ -25,9 +25,6 @@ export default function MessageForm() {
 	const onChange = (e) => {
 		const { name, value } = e.target;
 		setNewMessage({ ...newMessage, [name]: value });
-
-		if (name === "nickname") localStorage.setItem("nickname", value);
-		if (name === "color") localStorage.setItem("color", value);
 	};
 
 	const handleSubmit = (e) => {
@@ -39,8 +36,15 @@ export default function MessageForm() {
 
 		sendMessage(newMessage);
 		setNewMessage({ ...newMessage, message: "" });
+		//save prefs on firebase
 	};
 
+	//SETS USER NICKNAME AND COLOR
+	useEffect(() => {
+		setNewMessage({ nickname: userPrefs.nickname, color: userPrefs.color, message: "" });
+	}, [userPrefs]);
+
+	//SETS COLOR SELECTED
 	useEffect(() => {
 		const colorOption = document.querySelector(`.colorPicker option[value=${newMessage.color}]`);
 		colorOption && (colorOption.selected = true);
