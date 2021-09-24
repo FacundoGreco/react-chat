@@ -64,4 +64,13 @@ async function saveUserPrefs(id, nickname, color) {
 	}
 }
 
-export { getMessages, saveMessages, saveNewUser, verifyUser, saveUserPrefs };
+async function deleteMessageFromDb(id) {
+	try {
+		await db.collection("messages").doc(id).delete();
+	} catch (error) {
+		console.log(error);
+		throw new Error("No se pudo eliminar el mensaje.");
+	}
+}
+
+export { getMessages, saveMessages, saveNewUser, verifyUser, saveUserPrefs, deleteMessageFromDb };

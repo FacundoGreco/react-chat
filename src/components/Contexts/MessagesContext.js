@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { getMessages, saveMessages } from "../../model/model.js";
+import { getMessages, saveMessages, deleteMessageFromDb } from "../../model/model.js";
 
 export const MessagesContext = createContext();
 export const useMessagesContext = () => useContext(MessagesContext);
@@ -41,12 +41,25 @@ export function MessagesProvider({ children }) {
 		}
 	};
 
+	const deleteMessage = async (id) => {
+		setNotification("");
+
+		try {
+			await deleteMessageFromDb(id);
+			setNotification("Mensaje eliminado.");
+		} catch (error) {
+			setNotification("No se pudo eliminar el mensaje.");
+		}
+	};
+
 	useEffect(() => {
 		loadMessages();
 	}, []);
 
 	return (
-		<MessagesContext.Provider value={{ loadingMessages, messages, notification, setNotification, sendMessage }}>
+		<MessagesContext.Provider
+			value={{ loadingMessages, messages, notification, setNotification, sendMessage, deleteMessage }}
+		>
 			{children}
 		</MessagesContext.Provider>
 	);
