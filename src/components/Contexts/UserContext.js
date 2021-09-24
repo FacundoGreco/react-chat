@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
-import { saveNewUser, verifyUser } from "../../model/model";
+import { saveNewUser, saveUserPrefs, verifyUser } from "../../model/model";
 
 export const UserContext = createContext();
 export const useUserContext = () => useContext(UserContext);
@@ -7,7 +7,7 @@ export const useUserContext = () => useContext(UserContext);
 export function UserProvider({ children }) {
 	const [notification, setNotification] = useState("");
 	const [userLogged, setUserLogged] = useState(false);
-	const [userPrefs, setUserPrefs] = useState({ nickname: "", color: "white" });
+	const [userPrefs, setUserPrefs] = useState({ id: "", nickname: "", color: "white" });
 
 	const registerUser = async (newUser) => {
 		setNotification("");
@@ -29,7 +29,7 @@ export function UserProvider({ children }) {
 			const userData = await verifyUser(user);
 
 			if (userData) {
-				setUserPrefs({ nickname: userData.nickname, color: userData.color });
+				setUserPrefs({ id: userData.id, nickname: userData.nickname, color: userData.color });
 				setUserLogged(true);
 				setNotification("Has iniciado sesión!");
 			} else {
@@ -40,8 +40,19 @@ export function UserProvider({ children }) {
 		}
 	};
 
+	const changeUserPrefs = async (nickname, color) => {
+		try {
+			await saveUserPrefs(userPrefs.id, nickname, color);
+			setUserPrefs({ nickname: nickname, color: color });
+		} catch (error) {
+			setNotification("No se pudieron guardar las preferencias.");
+		}
+	};
+
 	return (
-		<UserContext.Provider value={{ notification, setNotification, registerUser, loginUser, userLogged, userPrefs }}>
+		<UserContext.Provider
+			value={{ notification, setNotification, registerUser, loginUser, userLogged, userPrefs, changeUserPrefs }}
+		>
 			{children}
 		</UserContext.Provider>
 	);

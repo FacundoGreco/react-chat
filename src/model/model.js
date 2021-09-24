@@ -45,7 +45,7 @@ async function verifyUser({ username, password }) {
 			.get();
 
 		if (user.docs[0]) {
-			return user.docs[0].data();
+			return { id: user.docs[0].id, ...user.docs[0].data() };
 		} else {
 			return false;
 		}
@@ -55,4 +55,13 @@ async function verifyUser({ username, password }) {
 	}
 }
 
-export { getMessages, saveMessages, saveNewUser, verifyUser };
+async function saveUserPrefs(id, nickname, color) {
+	try {
+		await db.collection("users").doc(id).update({ nickname: nickname, color: color });
+	} catch (error) {
+		console.log(error);
+		throw new Error("No se pudieron guardar las preferencias.");
+	}
+}
+
+export { getMessages, saveMessages, saveNewUser, verifyUser, saveUserPrefs };

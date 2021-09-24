@@ -4,7 +4,7 @@ import { useMessagesContext } from "../../Contexts/MessagesContext";
 import "./MessageForm.scss";
 
 export default function MessageForm() {
-	const { userLogged, userPrefs } = useUserContext();
+	const { userLogged, userPrefs, changeUserPrefs } = useUserContext();
 	const { loadingMessages, notification, setNotification, sendMessage } = useMessagesContext();
 
 	const [newMessage, setNewMessage] = useState({
@@ -36,7 +36,7 @@ export default function MessageForm() {
 
 		sendMessage(newMessage);
 		setNewMessage({ ...newMessage, message: "" });
-		//save prefs on firebase
+		changeUserPrefs(newMessage.nickname, newMessage.color);
 	};
 
 	//SETS USER NICKNAME AND COLOR
