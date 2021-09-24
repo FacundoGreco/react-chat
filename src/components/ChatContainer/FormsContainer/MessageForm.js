@@ -4,7 +4,7 @@ import { useMessagesContext } from "../../Contexts/MessagesContext";
 import "./MessageForm.scss";
 
 export default function MessageForm() {
-	const { userLogged, userPrefs, changeUserPrefs } = useUserContext();
+	const { userLogged, userPrefs, logOutUser, changeUserPrefs } = useUserContext();
 	const { loadingMessages, notification, setNotification, sendMessage } = useMessagesContext();
 
 	const [newMessage, setNewMessage] = useState({
@@ -37,6 +37,11 @@ export default function MessageForm() {
 		sendMessage(newMessage);
 		setNewMessage({ ...newMessage, message: "" });
 		changeUserPrefs(newMessage.nickname, newMessage.color);
+	};
+
+	const handleLogOut = (e) => {
+		e.preventDefault();
+		logOutUser();
 	};
 
 	//SETS USER NICKNAME AND COLOR
@@ -89,7 +94,16 @@ export default function MessageForm() {
 					onKeyPress={onKeyPress}
 				></textarea>
 			</fieldset>
-			<button disabled={loadingMessages || !userLogged}> ENVIAR </button>
+
+			<div className={"buttonsDiv"}>
+				<button disabled={loadingMessages || !userLogged} type="submit">
+					ENVIAR
+				</button>
+				<button disabled={loadingMessages || !userLogged} onClick={handleLogOut}>
+					Cerrar Sesión
+				</button>
+			</div>
+
 			<p className="notification">{notification}</p>
 		</form>
 	);

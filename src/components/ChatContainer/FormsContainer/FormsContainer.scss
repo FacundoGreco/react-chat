@@ -43,11 +43,18 @@
 			}
 		}
 
-		button {
-			margin-top: 20px;
-			font-size: medium;
-			width: 90px;
-			height: 40px;
+		.buttonsDiv {
+			width: 100%;
+			display: flex;
+			flex-direction: row;
+			justify-content: space-around;
+
+			button {
+				margin-top: 20px;
+				width: 90px;
+				height: 40px;
+				font-size: medium;
+			}
 		}
 	}
 }

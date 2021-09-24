@@ -40,10 +40,17 @@ export function UserProvider({ children }) {
 		}
 	};
 
+	const logOutUser = () => {
+		setUserLogged(false);
+		setUserPrefs({ id: "", nickname: "", color: "white" });
+		setNotification("Ha cerrado sesión.");
+	};
+
 	const changeUserPrefs = async (nickname, color) => {
 		try {
 			await saveUserPrefs(userPrefs.id, nickname, color);
 			setUserPrefs({ nickname: nickname, color: color });
+			setNotification("");
 		} catch (error) {
 			setNotification("No se pudieron guardar las preferencias.");
 		}
@@ -51,7 +58,16 @@ export function UserProvider({ children }) {
 
 	return (
 		<UserContext.Provider
-			value={{ notification, setNotification, registerUser, loginUser, userLogged, userPrefs, changeUserPrefs }}
+			value={{
+				notification,
+				setNotification,
+				registerUser,
+				loginUser,
+				userLogged,
+				userPrefs,
+				logOutUser,
+				changeUserPrefs,
+			}}
 		>
 			{children}
 		</UserContext.Provider>
