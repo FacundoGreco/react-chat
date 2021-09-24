@@ -3,7 +3,7 @@ import { useUserContext } from "../../Contexts/UserContext";
 import "./LoginForm.scss";
 
 export default function LoginForm() {
-	const { registerUser, notification, setNotification } = useUserContext();
+	const { registerUser, loginUser, notification, setNotification } = useUserContext();
 
 	const [user, setUser] = useState({
 		username: "",
@@ -16,17 +16,32 @@ export default function LoginForm() {
 		setUser({ ...user, [name]: value });
 	};
 
+	const validateInputs = () => {
+		if (!user.username) {
+			setNotification("El usuario está vacío.");
+			return false;
+		} else if (!user.password) {
+			setNotification("La contraseña está vacía.");
+			return false;
+		} else return true;
+	};
+
 	const handleRegister = (e) => {
 		e.preventDefault();
-		if (!user.username) return setNotification("El usuario está vacío.");
-		if (!user.password) return setNotification("La contraseña está vacía.");
 
-		registerUser(user);
-		setUser({ ...user, password: "" });
+		if (validateInputs()) {
+			registerUser(user);
+			setUser({ ...user, password: "" });
+		}
 	};
 
 	const handleLogin = (e) => {
 		e.preventDefault();
+
+		if (validateInputs()) {
+			loginUser(user);
+			setUser({ ...user, password: "" });
+		}
 	};
 
 	return (
@@ -54,8 +69,8 @@ export default function LoginForm() {
 			</fieldset>
 
 			<div className={"buttonsDiv"}>
-				<button onClick={handleRegister}> Registrarse </button>
 				<button onClick={handleLogin}> Login </button>
+				<button onClick={handleRegister}> Registrarse </button>
 			</div>
 			<p className="notification">{notification}</p>
 		</form>

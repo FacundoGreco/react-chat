@@ -36,4 +36,24 @@ async function saveNewUser(newUser) {
 	}
 }
 
-export { getMessages, saveMessages, saveNewUser };
+async function verifyUser({ username, password }) {
+	try {
+		const user = await db
+			.collection("users")
+			.where("username", "==", username)
+			.where("password", "==", password)
+			.get();
+
+		if (user.docs[0]) {
+			console.log(user.docs[0].data());
+			return user.docs[0].data();
+		} else {
+			return false;
+		}
+	} catch (error) {
+		console.log(error);
+		throw new Error("El usuario no se pudo validar.");
+	}
+}
+
+export { getMessages, saveMessages, saveNewUser, verifyUser };
