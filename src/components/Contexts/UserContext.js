@@ -7,6 +7,7 @@ export const useUserContext = () => useContext(UserContext);
 export function UserProvider({ children }) {
 	const [notification, setNotification] = useState("");
 	const [userLogged, setUserLogged] = useState(false);
+	const [adminLogged, setAdminLogged] = useState(false);
 	const [userPrefs, setUserPrefs] = useState({ id: "", nickname: "", color: "white" });
 
 	const registerUser = async (newUser) => {
@@ -31,6 +32,7 @@ export function UserProvider({ children }) {
 			if (userData) {
 				setUserPrefs({ id: userData.id, nickname: userData.nickname, color: userData.color });
 				setUserLogged(true);
+				setAdminLogged(userData.admin === true);
 				setNotification("Has iniciado sesión!");
 			} else {
 				setNotification("Usuario o contraseña incorrecto/s.");
@@ -64,6 +66,7 @@ export function UserProvider({ children }) {
 				registerUser,
 				loginUser,
 				userLogged,
+				adminLogged,
 				userPrefs,
 				logOutUser,
 				changeUserPrefs,

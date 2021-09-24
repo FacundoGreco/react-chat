@@ -33,8 +33,14 @@
 	}
 
 	p {
+		width: 90%;
 		margin-left: 20px;
 		overflow-x: hidden;
+	}
+
+	.deleteButton {
+		float: right;
+		cursor: pointer;
 	}
 }
 

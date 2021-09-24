@@ -1,10 +1,17 @@
 import React, { useEffect } from "react";
 import { useMessagesContext } from "../../Contexts/MessagesContext";
+import { useUserContext } from "../../Contexts/UserContext";
+
 import Message from "./Message";
 import "./MessagesContainer.scss";
 
 export default function MessagesContainer() {
-	const { loadingMessages, messages } = useMessagesContext();
+	const { loadingMessages, messages, deleteMessage } = useMessagesContext();
+	const { adminLogged } = useUserContext();
+
+	const handleDelete = (id) => {
+		if (adminLogged) deleteMessage(id);
+	};
 
 	useEffect(() => {
 		const messagesContainer = document.querySelector(".messagesContainer");
@@ -14,7 +21,15 @@ export default function MessagesContainer() {
 	return (
 		<div className="messagesContainer">
 			{loadingMessages && <h3>Cargando...</h3>}
-			{messages && messages.map((message) => <Message message={message} key={message.id} />)}
+			{messages &&
+				messages.map((message) => (
+					<Message
+						key={message.id}
+						message={message}
+						displayDelete={adminLogged}
+						handleDelete={handleDelete}
+					/>
+				))}
 		</div>
 	);
 }
