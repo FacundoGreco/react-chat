@@ -1,0 +1,39 @@
+.messageForm {
+	.transmiterData {
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: flex-end;
+		margin-bottom: 20px;
+
+		.nicknameDiv {
+			position: relative;
+			width: 70%;
+		}
+
+		.colorPicker {
+			height: 25px;
+		}
+	}
+
+	.notification {
+		margin-top: 30px;
+	}
+}
+
+@media only screen and (max-width: 576px) {
+	.messageForm {
+		.transmiterData {
+			flex-direction: column;
+			align-items: center;
+
+			.nicknameDiv {
+				width: 100%;
+				margin-bottom: 10px;
+			}
+
+			select {
+				width: 100%;
+			}
+		}
+	}
+}
