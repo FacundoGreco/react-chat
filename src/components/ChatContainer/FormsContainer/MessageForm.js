@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
+import { useUserContext } from "../../Contexts/UserContext";
 import { useMessagesContext } from "../../Contexts/MessagesContext";
 import "./MessageForm.scss";
 
 export default function MessageForm() {
+	const { userLogged, userPrefs } = useUserContext();
 	const { loadingMessages, notification, setNotification, sendMessage } = useMessagesContext();
 
 	const [newMessage, setNewMessage] = useState({
-		nickname: localStorage.getItem("nickname" || ""),
-		color: localStorage.getItem("color" || "white"),
+		nickname: localStorage.getItem("nickname") || "",
+		color: localStorage.getItem("color") || "white",
 		message: "",
 	});
 
@@ -50,6 +52,7 @@ export default function MessageForm() {
 				<div className="nicknameDiv">
 					<label htmlFor="nickname">Nickname</label>
 					<input
+						disabled={!userLogged}
 						className="nicknameInput"
 						type="text"
 						id="nickname"
@@ -58,7 +61,7 @@ export default function MessageForm() {
 						onChange={onChange}
 					/>
 				</div>
-				<select className="colorPicker" name="color" id="color" onChange={onChange}>
+				<select disabled={!userLogged} className="colorPicker" name="color" id="color" onChange={onChange}>
 					<option value="white">⚪</option>
 					<option value="red">🔴</option>
 					<option value="green">🟢</option>
@@ -71,6 +74,7 @@ export default function MessageForm() {
 			<fieldset>
 				<label htmlFor="message"> Message </label>
 				<textarea
+					disabled={!userLogged}
 					className="messageArea"
 					cols="30"
 					rows="6"
@@ -81,7 +85,7 @@ export default function MessageForm() {
 					onKeyPress={onKeyPress}
 				></textarea>
 			</fieldset>
-			<button disabled={loadingMessages}> ENVIAR </button>
+			<button disabled={loadingMessages || !userLogged}> ENVIAR </button>
 			<p className="notification">{notification}</p>
 		</form>
 	);

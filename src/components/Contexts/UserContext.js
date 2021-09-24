@@ -7,7 +7,7 @@ export const useUserContext = () => useContext(UserContext);
 export function UserProvider({ children }) {
 	const [notification, setNotification] = useState("");
 	const [userLogged, setUserLogged] = useState(false);
-	const [userPref, setUserPref] = useState({ nickname: "", color: "white" });
+	const [userPrefs, setUserPrefs] = useState({ nickname: "", color: "white" });
 
 	const registerUser = async (newUser) => {
 		setNotification("");
@@ -27,11 +27,11 @@ export function UserProvider({ children }) {
 			const userData = await verifyUser(user);
 
 			if (userData) {
-				setUserPref({ nickname: userData.nickname, color: userData.color });
+				setUserPrefs({ nickname: userData.nickname, color: userData.color });
 				setUserLogged(true);
 				setNotification("Has iniciado sesión!");
 			} else {
-				setNotification("El usuario y/o contraseña es/son incorrecto/s.");
+				setNotification("Usuario o contraseña incorrecto/s.");
 			}
 		} catch (error) {
 			setNotification(error.message);
@@ -39,7 +39,7 @@ export function UserProvider({ children }) {
 	};
 
 	return (
-		<UserContext.Provider value={{ notification, setNotification, registerUser, loginUser, userLogged, userPref }}>
+		<UserContext.Provider value={{ notification, setNotification, registerUser, loginUser, userLogged, userPrefs }}>
 			{children}
 		</UserContext.Provider>
 	);
