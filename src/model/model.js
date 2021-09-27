@@ -28,6 +28,16 @@ async function saveMessages(message) {
 	}
 }
 
+async function usernameAvailable(username) {
+	try {
+		const usernameList = await db.collection("users").where("username", "==", username).get();
+		return usernameList.docs.length === 0 ? true : false;
+	} catch (error) {
+		console.log(error);
+		throw new Error("El nombre de usuario no se pudo validar.");
+	}
+}
+
 async function saveNewUser(newUser) {
 	try {
 		newUser.password = await bcryptjs.hash(newUser.password, 8);
@@ -86,4 +96,4 @@ async function deleteMessageFromDb(id) {
 	}
 }
 
-export { getMessages, saveMessages, saveNewUser, verifyUser, saveUserPrefs, deleteMessageFromDb };
+export { getMessages, saveMessages, saveNewUser, verifyUser, saveUserPrefs, deleteMessageFromDb, usernameAvailable };

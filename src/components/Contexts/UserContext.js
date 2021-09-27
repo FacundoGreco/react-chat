@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
-import { saveNewUser, saveUserPrefs, verifyUser } from "../../model/model";
+import { usernameAvailable, saveNewUser, saveUserPrefs, verifyUser } from "../../model/model";
 
 export const UserContext = createContext();
 export const useUserContext = () => useContext(UserContext);
@@ -15,8 +15,12 @@ export function UserProvider({ children }) {
 		setUserLogged(false);
 
 		try {
-			await saveNewUser({ ...newUser, nickname: "", color: "white" });
-			setNotification("Usuario creado. Logueate!");
+			if (await usernameAvailable(newUser.username)) {
+				await saveNewUser({ ...newUser, nickname: "", color: "white" });
+				setNotification("Usuario creado. Logueate!");
+			} else {
+				setNotification("Usuario no disponible.");
+			}
 		} catch (error) {
 			setNotification(error.message);
 		}
