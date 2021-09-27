@@ -1,4 +1,5 @@
 import { db } from "./database.js";
+const bcryptjs = require("bcryptjs");
 
 async function getMessages(setMessages) {
 	try {
@@ -27,8 +28,19 @@ async function saveMessages(message) {
 	}
 }
 
+async function usernameAvailable(username) {
+	try {
+		const usernameList = await db.collection("users").where("username", "==", username).get();
+		return usernameList.docs.length === 0 ? true : false;
+	} catch (error) {
+		console.log(error);
+		throw new Error("El nombre de usuario no se pudo validar.");
+	}
+}
+
 async function saveNewUser(newUser) {
 	try {
+		newUser.password = await bcryptjs.hash(newUser.password, 8);
 		await db.collection("users").doc().set(newUser);
 	} catch (error) {
 		console.log(error);
@@ -36,16 +48,27 @@ async function saveNewUser(newUser) {
 	}
 }
 
+async function verifyPassword(usersDocs, password) {
+	try {
+		let userLogged = false;
+
+		for (const user of usersDocs) {
+			if (await bcryptjs.compare(password, user.data().password)) userLogged = { id: user.id, ...user.data() };
+		}
+
+		return userLogged;
+	} catch (error) {
+		console.log(error);
+		throw new Error("La contraseña no se pudo validar.");
+	}
+}
+
 async function verifyUser({ username, password }) {
 	try {
-		const user = await db
-			.collection("users")
-			.where("username", "==", username)
-			.where("password", "==", password)
-			.get();
+		const users = await db.collection("users").where("username", "==", username).get();
 
-		if (user.docs[0]) {
-			return { id: user.docs[0].id, ...user.docs[0].data() };
+		if (users.docs) {
+			return verifyPassword(users.docs, password);
 		} else {
 			return false;
 		}
@@ -73,4 +96,4 @@ async function deleteMessageFromDb(id) {
 	}
 }
 
-export { getMessages, saveMessages, saveNewUser, verifyUser, saveUserPrefs, deleteMessageFromDb };
+export { getMessages, saveMessages, saveNewUser, verifyUser, saveUserPrefs, deleteMessageFromDb, usernameAvailable };
